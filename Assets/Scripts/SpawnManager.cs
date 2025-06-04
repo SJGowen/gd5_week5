@@ -14,14 +14,12 @@ public class SpawnManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            if (enemies.Length == 0)
+            if (enemies.Length > 0)
             {
-                Debug.Log("enemies.Length == 0, in SpawnManager!");
-                return;
+                GameObject enemy = enemies[Random.Range(0, enemies.Length)];
+                Vector3 spawnPosition = randomSpawnPosition();
+                Instantiate(enemy, spawnPosition, Quaternion.identity);
             }
-            GameObject enemy = enemies[Random.Range(0, enemies.Length)];
-            Vector3 spawnPosition = randomSpawnPosition();
-            Instantiate(enemy, spawnPosition, Quaternion.identity);
         }
     }
 
