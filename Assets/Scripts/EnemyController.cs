@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class EnemyController : MonoBehaviour
 {
@@ -19,13 +18,20 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        // enemyRb.AddForce((player.transform.position - transform.position).normalized * speed);
-        //Debug.Log($"Player position ({player.transform.position}), Speed ({speed})");
         Vector3 lookDirection = (player.transform.position - transform.position).normalized;
-        enemyRb.AddForce(lookDirection * speed);
+        enemyRb.AddForce(speed * enemyRb.mass * lookDirection);
 
+        bool destroyMe = EnemyIsStationary();
+        // Update last position to the current position, used by EnemyIsStationary
+        lastPosition = transform.position;
+
+        if (destroyMe || enemyRb.transform.position.y < -10f) Destroy(gameObject);
+    }
+
+    private bool EnemyIsStationary()
+    {
         bool destroyMe = false;
-        //Debug.Log($"Distance = {Vector3.Distance(transform.position, lastPosition)}");
+
         if ((transform.position - lastPosition).sqrMagnitude < 0.0001f)
         {
             stillTime += Time.deltaTime;
@@ -39,8 +45,6 @@ public class EnemyController : MonoBehaviour
             stillTime = 0f;
         }
 
-        lastPosition = transform.position;
-
-        if (destroyMe || enemyRb.transform.position.y < -10f) Destroy(gameObject);
+        return destroyMe;
     }
 }

@@ -14,9 +14,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        // The focal point is now dragged from the inspector to the player controller
-        // you can also set it programmatically if needed as below:
-        //focalPoint = GameObject.Find("FocalPoint").transform;
     }
 
     void Update()
@@ -29,6 +26,7 @@ public class PlayerController : MonoBehaviour
 
         powerupIndicator.SetActive(hasPowerup);
         powerupIndicator.transform.position = transform.position;
+        powerupIndicator.transform.Rotate(200 * Time.deltaTime * Vector3.up);
         
 
         if (rb.transform.position.y < -10f)
@@ -50,8 +48,11 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Powerup"))
         {
-            hasPowerup = true;
-            StartCoroutine(PowerupCountdownRoutine(5));
+            if (!hasPowerup)
+            {
+                hasPowerup = true;
+                StartCoroutine(PowerupCountdownRoutine(5));
+            }
             Destroy(other.gameObject);
         }
     }
