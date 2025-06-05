@@ -6,7 +6,7 @@ public class EnemyController : MonoBehaviour
     Rigidbody enemyRb;
     GameObject player;
 
-    public float allowedStillTime = 3f;
+    public float allowedStillTime = 4f;
     private float stillTime = 0f;
     private Vector3 lastPosition;
 
@@ -25,14 +25,18 @@ public class EnemyController : MonoBehaviour
         // Update last position to the current position, used by EnemyIsStationary
         lastPosition = transform.position;
 
-        if (destroyMe || enemyRb.transform.position.y < -10f) Destroy(gameObject);
+        if (destroyMe || enemyRb.transform.position.y < -10f)
+        {
+            Debug.Log("Enemy destroyed: " + gameObject.name);
+            Destroy(gameObject);
+        }
     }
 
     private bool EnemyIsStationary()
     {
         bool destroyMe = false;
 
-        if ((transform.position - lastPosition).sqrMagnitude < 0.0001f)
+        if ((transform.position - lastPosition).sqrMagnitude < 0.001f)
         {
             stillTime += Time.deltaTime;
             if (stillTime >= allowedStillTime)

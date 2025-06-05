@@ -26,7 +26,7 @@ public class SpawnManager : MonoBehaviour
 
     void Start()
     {
-
+        Debug.Log($"Half Island Width: {halfIslandWidth}, Half Island Height: {halfIslandHeight}");
     }
 
     void Update()
@@ -52,6 +52,7 @@ public class SpawnManager : MonoBehaviour
 
         for (int i = 0; i < enemiesToSpawn; i++)
         {
+            Debug.Log($"Spawning enemy {i + 1} of {enemiesToSpawn} in wave {waveNumber}");
             Instantiate(enemies[Random.Range(0, enemies.Length)], 
                 RandomEnemySpawnPosition(), Quaternion.identity);
         }
@@ -106,7 +107,7 @@ public class SpawnManager : MonoBehaviour
             for (int i = 0; i < itemsToSpawn; i++)
             {
                 Instantiate(rewards[Random.Range(0, rewards.Length)],
-                    RandomPowerupSpawnPosition(1), Quaternion.identity);
+                    RandomPowerupSpawnPosition(), Quaternion.identity);
             }
         }
     }

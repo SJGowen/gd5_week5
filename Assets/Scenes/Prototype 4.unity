@@ -248,6 +248,10 @@ MonoBehaviour:
   - {fileID: 4363794164113458225, guid: 39632001ba4c6d343a1b44aa49ddee59, type: 3}
   - {fileID: 3091994618084570343, guid: 2a8f62d8798170741a6ce90e955a2804, type: 3}
   - {fileID: 3002176502005681286, guid: f4b8389731367ec4e9e64f858d6330ea, type: 3}
+  rewards:
+  - {fileID: 8210207704222383389, guid: 49689ecacbc03464d8f16d88b56ec248, type: 3}
+  - {fileID: 9068803578620550150, guid: 668e6130d597dfc46a25bf1c743959d3, type: 3}
+  - {fileID: 7844123698094109230, guid: 3b46907f4ffc3994f9bfe05660443f5e, type: 3}
   PowerupFlagsAllowed: 9
 --- !u!4 &464953991
 Transform:
@@ -402,7 +406,7 @@ MonoBehaviour:
   playerSpeed: 5
   focalPoint: {fileID: 1293594940}
   hasPowerup: 0
-  powerupStrength: 5
+  powerupStrength: 20
   powerupIndicator: {fileID: 1152413544}
 --- !u!54 &718331337
 Rigidbody:
