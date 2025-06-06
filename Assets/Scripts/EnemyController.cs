@@ -27,7 +27,7 @@ public class EnemyController : MonoBehaviour
 
         if (destroyMe || enemyRb.transform.position.y < -10f)
         {
-            Debug.Log("Enemy destroyed: " + gameObject.name);
+            // Debug.Log("Enemy destroyed: " + gameObject.name);
             Destroy(gameObject);
         }
     }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 public class SpawnManager : MonoBehaviour
 {
     private int enemyCount;
-    private int waveNumber = 1;
+    private int waveNumber = 0;
     private readonly static float halfIslandWidth = 20f;
-    private readonly static float halfIslandHeight = Mathf.Sqrt((halfIslandWidth * halfIslandWidth) + ((halfIslandWidth / 2) * (halfIslandWidth /2)));
+    private readonly static float halfIslandHeight = Mathf.Sqrt((halfIslandWidth * halfIslandWidth) - ((halfIslandWidth / 2) * (halfIslandWidth /2)));
 
     private readonly List<(float xPos, float yPos)> spawnPositions = new()
     {
@@ -26,7 +26,7 @@ public class SpawnManager : MonoBehaviour
 
     void Start()
     {
-        Debug.Log($"Half Island Width: {halfIslandWidth}, Half Island Height: {halfIslandHeight}");
+        // Debug.Log($"Half Island Width: {halfIslandWidth}, Half Island Height: {halfIslandHeight}");
     }
 
     void Update()
@@ -52,7 +52,7 @@ public class SpawnManager : MonoBehaviour
 
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            Debug.Log($"Spawning enemy {i + 1} of {enemiesToSpawn} in wave {waveNumber}");
+            // Debug.Log($"Spawning enemy {i + 1} of {enemiesToSpawn} in wave {waveNumber}");
             Instantiate(enemies[Random.Range(0, enemies.Length)], 
                 RandomEnemySpawnPosition(), Quaternion.identity);
         }

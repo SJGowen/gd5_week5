@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
             Vector3 awayFromPlayer = (collision.transform.position - transform.position).normalized;
             enemyRb.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
 
-            //Debug.Log($"The player has collided with {collision.gameObject.name}");
+            // Debug.Log($"The player has collided with {collision.gameObject.name}");
         }
     }
 
