@@ -18,6 +18,7 @@ public class SpawnManager : MonoBehaviour
         (-halfIslandWidth / 2, halfIslandHeight),
     };
 
+    public PlayerController playerController;
     public GameObject[] enemies;
     public GameObject[] powerups;
     public GameObject[] bosses;
@@ -34,8 +35,10 @@ public class SpawnManager : MonoBehaviour
 
     void Update()
     {
-        // TODO: Manually count this instead of using FindObjectsByType, which is expensive.
-        enemyCount = FindObjectsByType<EnemyController>(FindObjectsSortMode.None).Length;
+        if (playerController != null)
+        {
+            enemyCount = playerController.FoesCount + playerController.BossFoesCount;
+        }
 
         if (enemyCount == 0)
         {
@@ -60,6 +63,8 @@ public class SpawnManager : MonoBehaviour
             Instantiate(enemies[Random.Range(0, enemies.Length)],
                 RandomEnemySpawnPosition(), Quaternion.identity);
         }
+
+        if (playerController != null) playerController.FoesCount += enemiesToSpawn;
     }
 
 
@@ -76,14 +81,9 @@ public class SpawnManager : MonoBehaviour
     {
         if (powerups.Length > 0)
         {
-            // Destroy existing powerups so new ones are created in different location.
-            GameObject[] existing = GameObject.FindGameObjectsWithTag("Powerup");
-            foreach (GameObject powerup in existing)
-            {
-                Destroy(powerup);
-            }
+            int existingPowerups = GameObject.FindGameObjectsWithTag("Powerup").Length;
 
-            for (int i = 0; i < Mathf.Min(waveNumber, PowerupsAllowed); i++)
+            while (existingPowerups <= Mathf.Min(waveNumber, PowerupsAllowed))
             {
                 Instantiate(powerups[Random.Range(0, powerups.Length)],
                     RandomPowerupSpawnPosition(), Quaternion.identity);
@@ -91,26 +91,17 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    Vector3 RandomPowerupSpawnPosition(float yPosition = 0)
-    {
-        // This can return a position outside the island, but that is part of challenge.
-        return new Vector3(
-            Random.Range(-halfIslandWidth, halfIslandWidth),
-            yPosition,
-            Random.Range(-halfIslandHeight, halfIslandHeight)
-        );
-    }
-
-    private void SpawnBosses(int itemsToSpawn)
+    private void SpawnBosses(int bossesToSpawn)
     {
         if (bosses.Length > 0)
         {
-            for (int i = 0; i < itemsToSpawn; i++)
+            for (int i = 0; i < bossesToSpawn; i++)
             {
                 Instantiate(bosses[Random.Range(0, bosses.Length)],
                     RandomEnemySpawnPosition(1), Quaternion.identity);
-
             }
+
+            if (playerController != null) playerController.BossFoesCount += bossesToSpawn;
         }
     }
 
@@ -118,18 +109,43 @@ public class SpawnManager : MonoBehaviour
     {
         if (rewards.Length > 0)
         {
-            // Destroy existing rewards so new ones are created in different location.
-            GameObject[] existing = GameObject.FindGameObjectsWithTag("Reward");
-            foreach (GameObject reward in existing)
-            {
-                Destroy(reward);
-            }
+            int existingRewards = GameObject.FindGameObjectsWithTag("Reward").Length;
 
-            for (int i = 0; i < Mathf.Min(itemsToSpawn, RewardsAllowed); i++)
+            while (existingRewards <= Mathf.Min(waveNumber, RewardsAllowed))
             {
                 Instantiate(rewards[Random.Range(0, rewards.Length)],
                     RandomPowerupSpawnPosition(), Quaternion.identity);
+                existingRewards++;
             }
         }
+    }
+
+    Vector3 RandomPowerupSpawnPosition(float yPosition = 0)
+    {
+        int attempt = 0;
+        float xPosition, zPosition;
+        do
+        {
+            attempt++;
+            xPosition = Random.Range(-halfIslandWidth, halfIslandWidth);
+            zPosition = Random.Range(-halfIslandHeight, halfIslandHeight);
+        } while (!IsPositionAboveIsland(xPosition, zPosition) || attempt > 9);
+
+        return new Vector3(xPosition, yPosition, zPosition);
+    }
+
+    private bool IsPositionAboveIsland(float xPosition, float zPosition)
+    {
+        RaycastHit hit;
+        Vector3 origin = new Vector3(xPosition, 2.5f, zPosition);
+        if (Physics.Raycast(origin, Vector3.down, out hit))
+        {
+            if (hit.collider.CompareTag("Island"))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

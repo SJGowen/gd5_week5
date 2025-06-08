@@ -15,12 +15,12 @@ public class PlayerController : MonoBehaviour
     public GameObject powerupIndicator;
     public GameObject projectilePrefab;
     public int projectileSpeed = 40;
-    public float jumpForce = 20f;
+    public float jumpForce = 40f;
 
-    private int livesCount = 3;
     private bool killEnemiesOnContact;
     private readonly float gravityModifier = 3f;
 
+    private int livesCount = 3;
     [SerializeField]
     public TextMeshProUGUI livesCountGUI;
 
@@ -34,31 +34,45 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private int gemsCount;
+    private int foesCount;
     [SerializeField]
-    public TextMeshProUGUI gemsCountGUI;
+    public TextMeshProUGUI foesCountGUI;
 
-    public int GemsCount
+    public int FoesCount
     {
-        get { return gemsCount; }
+        get { return foesCount; }
         set
         {
-            gemsCount = value;
-            gemsCountGUI.text = $"Gems = {gemsCount}";
+            foesCount = value;
+            foesCountGUI.text = $"Foes = {foesCount} (Big = {bossFoesCount})";
         }
     }
 
-    private int starsCount;
+    private int bossFoesCount;
     [SerializeField]
-    public TextMeshProUGUI starsCountGUI;
+    public TextMeshProUGUI bossFoesCountGUI;
 
-    public int StarsCount
+    public int BossFoesCount
     {
-        get { return starsCount; }
+        get { return bossFoesCount; }
         set
         {
-            starsCount = value;
-            starsCountGUI.text = $"Stars = {starsCount}";
+            bossFoesCount = value;
+            bossFoesCountGUI.text = $"Foes = {foesCount} (Big = {bossFoesCount})";
+        }
+    }
+
+    private int rewardsCount;
+    [SerializeField]
+    public TextMeshProUGUI rewardsCountGUI;
+
+    public int RewardsCount
+    {
+        get { return rewardsCount; }
+        set
+        {
+            rewardsCount = value;
+            rewardsCountGUI.text = $"Rewards = {rewardsCount}";
         }
     }
 
@@ -119,7 +133,10 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.mass *= 5;
+            float oldMass = rb.mass;
+            rb.mass = 100f;
+            float oldLinearDamping = rb.linearDamping;
+            rb.linearDamping = 10f;
             try
             {
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -127,10 +144,16 @@ public class PlayerController : MonoBehaviour
                 {
                     ShootProjectile(transform.position, enemy.transform.position);
                 }
+                GameObject[] bossEnemies = GameObject.FindGameObjectsWithTag("BossEnemy");
+                foreach (GameObject bossEnemy in bossEnemies)
+                {
+                    ShootProjectile(transform.position, bossEnemy.transform.position);
+                }
             }
             finally
             {
-                rb.mass /= 5;
+                rb.mass = oldMass;
+                rb.linearDamping = oldLinearDamping;
             }
         }
     }
@@ -163,6 +186,15 @@ public class PlayerController : MonoBehaviour
             {
                 Destroy(enemy);
             }
+            FoesCount -= enemies.Length;
+
+            GameObject[] bossEnemies = GameObject.FindGameObjectsWithTag("BossEnemy");
+            foreach (GameObject bossEnemy in bossEnemies)
+            {
+                Destroy(bossEnemy);
+            }
+            BossFoesCount -= bossEnemies.Length;
+            
             hasPowerup = false;
         }
     }
@@ -171,13 +203,13 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Collider[] colliders = Physics.OverlapSphere(transform.position, 12f);
+            Collider[] colliders = Physics.OverlapSphere(transform.position, jumpForce / 2);
             foreach (Collider collider in colliders)
             {
                 Rigidbody rb = collider.GetComponent<Rigidbody>();
                 if (rb != null && rb.name != "Player")
                 {
-                    rb.AddExplosionForce(400f, transform.position, 12f);
+                    rb.AddExplosionForce(400f, transform.position, jumpForce / 2);
                 }
             }
 
@@ -209,18 +241,20 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Reward"))
         {
-            if (other.name.StartsWith("Gem_01")) GemsCount++;
-            if (other.name.StartsWith("Star_01")) StarsCount++;
+            //if (other.name.StartsWith("Gem_01") || other.name.StartsWith("Star_01")) RewardsCount++;
+            RewardsCount++;
             Destroy(other.gameObject);
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (hasPowerup && collision.gameObject.CompareTag("Enemy"))
+        if (hasPowerup)
         {
             if (killEnemiesOnContact)
             {
+                if (collision.gameObject.CompareTag("Enemy")) FoesCount -= 1;
+                if (collision.gameObject.CompareTag("BossEnemy")) BossFoesCount -= 1;
                 Destroy(collision.gameObject);
             }
 

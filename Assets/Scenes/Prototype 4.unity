@@ -233,6 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba6e37e1d9f700d41b8f29389f4c04b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 718331336}
   enemies:
   - {fileID: 4363794164113458225, guid: b3b75d7ec3fc20f4e9bec6d7e17d689b, type: 3}
   - {fileID: 3091994618084570343, guid: 849b7a085f3d3cf48806cdb7958b4fa9, type: 3}
@@ -362,8 +363,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1472442211}
+  - {fileID: 1870807294}
   - {fileID: 2144275886}
-  - {fileID: 1760906788}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -387,7 +388,7 @@ GameObject:
   - component: {fileID: 718331336}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -411,10 +412,11 @@ MonoBehaviour:
   powerupIndicator: {fileID: 1152413544}
   projectilePrefab: {fileID: 1699711983231605777, guid: 4675cf069076f7343bb261ed05ce8cd4, type: 3}
   projectileSpeed: 40
-  jumpForce: 20
+  jumpForce: 40
   livesCountGUI: {fileID: 1472442212}
-  gemsCountGUI: {fileID: 2144275887}
-  starsCountGUI: {fileID: 1760906789}
+  foesCountGUI: {fileID: 1870807295}
+  bossFoesCountGUI: {fileID: 1870807295}
+  rewardsCountGUI: {fileID: 2144275887}
 --- !u!54 &718331337
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -921,6 +923,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1301643505922104, guid: 961be46ca9a355943ae3f65c47741bb0, type: 3}
+      propertyPath: m_TagString
+      value: Island
+      objectReference: {fileID: 0}
     - target: {fileID: 4625923886776944, guid: 961be46ca9a355943ae3f65c47741bb0, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1125,7 +1131,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 387.99982, y: 25}
+  m_AnchoredPosition: {x: 404, y: 25}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1472442212
@@ -1229,7 +1235,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1472442210}
   m_CullTransparentMesh: 1
---- !u!1 &1760906787
+--- !u!1 &1870807293
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1237,23 +1243,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1760906788}
-  - component: {fileID: 1760906790}
-  - component: {fileID: 1760906789}
+  - component: {fileID: 1870807294}
+  - component: {fileID: 1870807296}
+  - component: {fileID: 1870807295}
   m_Layer: 5
-  m_Name: StarsText
+  m_Name: FoesText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1760906788
+--- !u!224 &1870807294
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1760906787}
+  m_GameObject: {fileID: 1870807293}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3.5938501, y: 2.66071, z: 1.0088}
@@ -1261,18 +1267,18 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 619338795}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -100, y: 25}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 118, y: 25}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1760906789
+--- !u!114 &1870807295
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1760906787}
+  m_GameObject: {fileID: 1870807293}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
@@ -1286,7 +1292,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Stars = 0
+  m_text: 'Foes = 3 (Big = 0)
 
 '
   m_isRightToLeft: 0
@@ -1322,7 +1328,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1353,19 +1359,19 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 28.769379, y: 5.784874, z: 79.59173, w: 20.677544}
+  m_margin: {x: 0, y: 5.784874, z: 69.17382, w: 20.677544}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!222 &1760906790
+--- !u!222 &1870807296
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1760906787}
+  m_GameObject: {fileID: 1870807293}
   m_CullTransparentMesh: 1
 --- !u!1 &1925325632
 GameObject:
@@ -1428,7 +1434,7 @@ GameObject:
   - component: {fileID: 2144275888}
   - component: {fileID: 2144275887}
   m_Layer: 5
-  m_Name: GemsText
+  m_Name: RewardsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1450,7 +1456,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 25}
+  m_AnchoredPosition: {x: 470, y: 25}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2144275887
@@ -1473,7 +1479,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Gems = 0
+  m_text: 'Rewards = 0
 
 '
   m_isRightToLeft: 0
@@ -1509,7 +1515,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
