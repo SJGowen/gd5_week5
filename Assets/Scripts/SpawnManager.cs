@@ -33,7 +33,7 @@ public class SpawnManager : MonoBehaviour
 
     void Update()
     {
-        // TODO: Manually count this instead of using FindObjectsByType, which is expensive.
+        // DONE: Manually count this instead of using FindObjectsByType, which is expensive.
         //enemyCount = FindObjectsByType<EnemyController>(FindObjectsSortMode.None).Length;
 
         if (playerController != null)
