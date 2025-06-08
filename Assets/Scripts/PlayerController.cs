@@ -14,10 +14,13 @@ public class PlayerController : MonoBehaviour
     public float powerupStrength;
     public GameObject powerupIndicator;
     public GameObject projectilePrefab;
-    public int projectileSpeed = 50;
-    public float jumpForce = 8f;
+    public int projectileSpeed = 40;
+    public float jumpForce = 20f;
 
     private int livesCount = 3;
+    private bool killEnemiesOnContact;
+    private readonly float gravityModifier = 3f;
+
     [SerializeField]
     public TextMeshProUGUI livesCountGUI;
 
@@ -63,6 +66,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        Physics.gravity *= gravityModifier;
     }
 
     void Update()
@@ -80,11 +84,17 @@ public class PlayerController : MonoBehaviour
         if (hasPowerup)
         {
             if (powerupName.StartsWith("FireIcon")) FireProjectilesAtEnemies();
-            if (powerupName.StartsWith("GoldCupIcon")) AddExtraLife(); 
+            if (powerupName.StartsWith("GoldCupIcon")) AddExtraLife();
             if (powerupName.StartsWith("MultiplierIcon")) KillAllEnemies();
             if (powerupName.StartsWith("PowerIcon")) CauseExplosion();
+            if (powerupName.StartsWith("RadiationIcon")) KillEnemiesOnContact();
         }
 
+        CheckIfPlayerHasFallenFromIsland();
+    }
+
+    private void CheckIfPlayerHasFallenFromIsland()
+    {
         if (rb.transform.position.y < -10f)
         {
             // Reset the player's position if they fall below a certain height
@@ -100,6 +110,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        focalPoint.position = transform.position;
+    }
+
     private void FireProjectilesAtEnemies()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -110,7 +125,7 @@ public class PlayerController : MonoBehaviour
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
                 foreach (GameObject enemy in enemies)
                 {
-                    ShootProjectile(enemy.transform.position);
+                    ShootProjectile(transform.position, enemy.transform.position);
                 }
             }
             finally
@@ -120,14 +135,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void ShootProjectile(Vector3 targePosition)
+    private void ShootProjectile(Vector3 firingPosition, Vector3 targePosition)
     {
-        GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        GameObject projectile = Instantiate(projectilePrefab, firingPosition, Quaternion.identity);
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
         if (rb != null)
         {
-            Vector3 direction = (targePosition - transform.position).normalized;
+            Vector3 direction = (targePosition - firingPosition).normalized;
             rb.linearVelocity = direction * projectileSpeed;
             Destroy(projectile, 4);
         }
@@ -166,14 +181,17 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
             rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
             hasPowerup = false;
         }
     }
 
-    private void LateUpdate()
+    private void KillEnemiesOnContact()
     {
-        focalPoint.position = transform.position;
+        if (!killEnemiesOnContact) killEnemiesOnContact = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -191,8 +209,9 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Reward"))
         {
-            if (other.name == "Gem_01") GemsCount++;
-            if (other.name == "Star_01") StarsCount++;
+            if (other.name.StartsWith("Gem_01")) GemsCount++;
+            if (other.name.StartsWith("Star_01")) StarsCount++;
+            Destroy(other.gameObject);
         }
     }
 
@@ -200,6 +219,11 @@ public class PlayerController : MonoBehaviour
     {
         if (hasPowerup && collision.gameObject.CompareTag("Enemy"))
         {
+            if (killEnemiesOnContact)
+            {
+                Destroy(collision.gameObject);
+            }
+
             Rigidbody enemyRb = collision.gameObject.GetComponent<Rigidbody>();
             Vector3 awayFromPlayer = (collision.transform.position - transform.position).normalized;
             enemyRb.AddForce(awayFromPlayer * powerupStrength, ForceMode.Impulse);
@@ -211,5 +235,6 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(waitSeconds);
         hasPowerup = false;
+        if (killEnemiesOnContact) killEnemiesOnContact = false;
     }
 }

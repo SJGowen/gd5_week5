@@ -242,6 +242,7 @@ MonoBehaviour:
   - {fileID: 772622425945064584, guid: 4b969ca6fcc0e97498e3bace89080067, type: 3}
   - {fileID: 3463868020194419679, guid: 1facc5618f173e548a8a653f09c5ba7d, type: 3}
   - {fileID: 6412090086971720773, guid: b7706505ed262eb448fc77b25f39c1ec, type: 3}
+  - {fileID: 192068, guid: 3449b39482e1d10448df302e57540d05, type: 3}
   bosses:
   - {fileID: 4363794164113458225, guid: 39632001ba4c6d343a1b44aa49ddee59, type: 3}
   - {fileID: 3091994618084570343, guid: 2a8f62d8798170741a6ce90e955a2804, type: 3}
@@ -249,7 +250,8 @@ MonoBehaviour:
   rewards:
   - {fileID: 8210207704222383389, guid: 49689ecacbc03464d8f16d88b56ec248, type: 3}
   - {fileID: 7844123698094109230, guid: 3b46907f4ffc3994f9bfe05660443f5e, type: 3}
-  PowerupFlagsAllowed: 9
+  PowerupsAllowed: 9
+  RewardsAllowed: 3
 --- !u!4 &464953991
 Transform:
   m_ObjectHideFlags: 0
@@ -408,11 +410,11 @@ MonoBehaviour:
   powerupStrength: 20
   powerupIndicator: {fileID: 1152413544}
   projectilePrefab: {fileID: 1699711983231605777, guid: 4675cf069076f7343bb261ed05ce8cd4, type: 3}
-  projectileSpeed: 50
-  jumpForce: 8
+  projectileSpeed: 40
+  jumpForce: 20
   livesCountGUI: {fileID: 1472442212}
-  gemsCountGUI: {fileID: 0}
-  starsCountGUI: {fileID: 0}
+  gemsCountGUI: {fileID: 2144275887}
+  starsCountGUI: {fileID: 1760906789}
 --- !u!54 &718331337
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ public class SpawnManager : MonoBehaviour
     private int enemyCount;
     private int waveNumber = 0;
     private readonly static float halfIslandWidth = 20f;
-    private readonly static float halfIslandHeight = Mathf.Sqrt((halfIslandWidth * halfIslandWidth) - ((halfIslandWidth / 2) * (halfIslandWidth /2)));
+    private readonly static float halfIslandHeight = Mathf.Sqrt((halfIslandWidth * halfIslandWidth) - ((halfIslandWidth / 2) * (halfIslandWidth / 2)));
 
     private readonly List<(float xPos, float yPos)> spawnPositions = new()
     {
@@ -22,11 +22,14 @@ public class SpawnManager : MonoBehaviour
     public GameObject[] powerups;
     public GameObject[] bosses;
     public GameObject[] rewards;
-    public int PowerupFlagsAllowed = 9; // Maximum number of powerups allowed in the scene at once
+    public int PowerupsAllowed = 9; // Maximum number of powerups allowed in the scene at once
+    public int RewardsAllowed = 3; // Maximum number of rewards allowed in the scene at once
+
+
 
     void Start()
     {
-        // Debug.Log($"Half Island Width: {halfIslandWidth}, Half Island Height: {halfIslandHeight}");
+        //Debug.Log($"Half Island Width: {halfIslandWidth}, Half Island Height: {halfIslandHeight}");
     }
 
     void Update()
@@ -39,9 +42,10 @@ public class SpawnManager : MonoBehaviour
             waveNumber++;
             SpawnEnemyWave(waveNumber * 2);
             SpawnPowerups(waveNumber);
+            SpawnRewards(waveNumber);
             if (waveNumber % 5 == 0)
             {
-                SpawnBossesAndRewards(waveNumber / 5);
+                SpawnBosses(waveNumber / 5);
             }
         }
     }
@@ -53,7 +57,7 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < enemiesToSpawn; i++)
         {
             // Debug.Log($"Spawning enemy {i + 1} of {enemiesToSpawn} in wave {waveNumber}");
-            Instantiate(enemies[Random.Range(0, enemies.Length)], 
+            Instantiate(enemies[Random.Range(0, enemies.Length)],
                 RandomEnemySpawnPosition(), Quaternion.identity);
         }
     }
@@ -63,20 +67,27 @@ public class SpawnManager : MonoBehaviour
     {
         int index = Random.Range(0, 6);
         return new Vector3(
-            spawnPositions[index].xPos, 
-            yPosition, 
+            spawnPositions[index].xPos,
+            yPosition,
             spawnPositions[index].yPos);
     }
 
     void SpawnPowerups(int waveNumber)
     {
-        if (powerups.Length == 0) return; // No powerups to spawn
-        if (FindObjectsByType<Rotation>(FindObjectsSortMode.None).Length >= PowerupFlagsAllowed) return;
-
-        for (int i = 0; i < waveNumber; i++)
+        if (powerups.Length > 0)
         {
-            Instantiate(powerups[Random.Range(0, powerups.Length)],
-                RandomPowerupSpawnPosition(), Quaternion.identity);
+            // Destroy existing powerups so new ones are created in different location.
+            GameObject[] existing = GameObject.FindGameObjectsWithTag("Powerup");
+            foreach (GameObject powerup in existing)
+            {
+                Destroy(powerup);
+            }
+
+            for (int i = 0; i < Mathf.Min(waveNumber, PowerupsAllowed); i++)
+            {
+                Instantiate(powerups[Random.Range(0, powerups.Length)],
+                    RandomPowerupSpawnPosition(), Quaternion.identity);
+            }
         }
     }
 
@@ -90,7 +101,7 @@ public class SpawnManager : MonoBehaviour
         );
     }
 
-    private void SpawnBossesAndRewards(int itemsToSpawn)
+    private void SpawnBosses(int itemsToSpawn)
     {
         if (bosses.Length > 0)
         {
@@ -101,10 +112,20 @@ public class SpawnManager : MonoBehaviour
 
             }
         }
+    }
 
+    private void SpawnRewards(int itemsToSpawn)
+    {
         if (rewards.Length > 0)
         {
-            for (int i = 0; i < itemsToSpawn; i++)
+            // Destroy existing rewards so new ones are created in different location.
+            GameObject[] existing = GameObject.FindGameObjectsWithTag("Reward");
+            foreach (GameObject reward in existing)
+            {
+                Destroy(reward);
+            }
+
+            for (int i = 0; i < Mathf.Min(itemsToSpawn, RewardsAllowed); i++)
             {
                 Instantiate(rewards[Random.Range(0, rewards.Length)],
                     RandomPowerupSpawnPosition(), Quaternion.identity);
