@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -119,7 +118,7 @@ public class PlayerController : MonoBehaviour
             LivesCount--;
             if (LivesCount == 0)
             {
-                // Game over swicth scenes
+                // Game over switch scenes
             }
         }
     }
@@ -251,7 +250,8 @@ public class PlayerController : MonoBehaviour
     {
         if (hasPowerup)
         {
-            if (killEnemiesOnContact)
+            if (killEnemiesOnContact && (
+                collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("BossEnemy")))
             {
                 if (collision.gameObject.CompareTag("Enemy")) FoesCount -= 1;
                 if (collision.gameObject.CompareTag("BossEnemy")) BossFoesCount -= 1;

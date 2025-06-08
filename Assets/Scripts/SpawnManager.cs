@@ -26,8 +26,6 @@ public class SpawnManager : MonoBehaviour
     public int PowerupsAllowed = 9; // Maximum number of powerups allowed in the scene at once
     public int RewardsAllowed = 3; // Maximum number of rewards allowed in the scene at once
 
-
-
     void Start()
     {
         //Debug.Log($"Half Island Width: {halfIslandWidth}, Half Island Height: {halfIslandHeight}");
@@ -35,6 +33,9 @@ public class SpawnManager : MonoBehaviour
 
     void Update()
     {
+        // TODO: Manually count this instead of using FindObjectsByType, which is expensive.
+        //enemyCount = FindObjectsByType<EnemyController>(FindObjectsSortMode.None).Length;
+
         if (playerController != null)
         {
             enemyCount = playerController.FoesCount + playerController.BossFoesCount;
@@ -122,14 +123,14 @@ public class SpawnManager : MonoBehaviour
 
     Vector3 RandomPowerupSpawnPosition(float yPosition = 0)
     {
-        int attempt = 0;
+        int attempts = 0;
         float xPosition, zPosition;
         do
         {
-            attempt++;
+            attempts++;
             xPosition = Random.Range(-halfIslandWidth, halfIslandWidth);
             zPosition = Random.Range(-halfIslandHeight, halfIslandHeight);
-        } while (!IsPositionAboveIsland(xPosition, zPosition) || attempt > 9);
+        } while (!IsPositionAboveIsland(xPosition, zPosition) && attempts <= 9);
 
         return new Vector3(xPosition, yPosition, zPosition);
     }
