@@ -117,6 +117,9 @@ public class PlayerController : MonoBehaviour
             if (LivesCount <= 0)
             {
                 gameOverGui.text = "GAME OVER";
+                Cursor.visible = true; // Show the cursor
+                Cursor.lockState = CursorLockMode.None; // Unlock the cursor to the center of the screen
+
             }
 
             // Reset the player's position if they fall below a certain height
