@@ -118,8 +118,7 @@ public class PlayerController : MonoBehaviour
             {
                 gameOverGui.text = "GAME OVER";
                 Cursor.visible = true; // Show the cursor
-                Cursor.lockState = CursorLockMode.None; // Unlock the cursor to the center of the screen
-
+                Cursor.lockState = CursorLockMode.None; // Unlock the cursor
             }
 
             // Reset the player's position if they fall below a certain height
