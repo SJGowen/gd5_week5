@@ -41,7 +41,7 @@ public class SpawnManager : MonoBehaviour
             enemyCount = playerController.FoesCount + playerController.BossFoesCount;
         }
 
-        if (enemyCount == 0)
+        if (enemyCount == 0 && playerController.livesCount > 0)
         {
             waveNumber++;
             SpawnEnemyWave(waveNumber * 2);
@@ -88,6 +88,7 @@ public class SpawnManager : MonoBehaviour
             {
                 Instantiate(powerups[Random.Range(0, powerups.Length)],
                     RandomPowerupSpawnPosition(), Quaternion.identity);
+                existingPowerups++;
             }
         }
     }

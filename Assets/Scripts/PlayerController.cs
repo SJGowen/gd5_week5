@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     private string powerupName;
     [SerializeField] private float playerSpeed = 5f;
     [SerializeField] public Transform focalPoint;
+    [SerializeField] public TextMeshProUGUI gameOverGui;
 
     public bool hasPowerup;
     public float powerupStrength;
@@ -19,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private bool killEnemiesOnContact;
     private readonly float gravityModifier = 3f;
 
-    private int livesCount = 3;
+    public int livesCount = 3;
     [SerializeField]
     public TextMeshProUGUI livesCountGUI;
 
@@ -84,6 +85,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (LivesCount <= 0) return;
+
         float verticalInput = Input.GetAxis("Vertical");
         float horizontalInput = Input.GetAxis("Horizontal");
         Vector2 moveDirection = new Vector2(horizontalInput, verticalInput).normalized;
@@ -108,18 +111,19 @@ public class PlayerController : MonoBehaviour
 
     private void CheckIfPlayerHasFallenFromIsland()
     {
-        if (rb.transform.position.y < -10f)
+        if (rb.transform.position.y < -12f && LivesCount > 0)
         {
+            LivesCount--;
+            if (LivesCount <= 0)
+            {
+                gameOverGui.text = "GAME OVER";
+            }
+
             // Reset the player's position if they fall below a certain height
             rb.transform.position = new Vector3(0f, 0f, 0f);
             // Make the reset player not move until the next input
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            LivesCount--;
-            if (LivesCount == 0)
-            {
-                // Game over switch scenes
-            }
         }
     }
 

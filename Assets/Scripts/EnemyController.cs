@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
     private float stillTime = 0f;
     private Vector3 lastPosition;
     private GameObject projectilePrefab;
-    private float projectileSpeed = 40;
+    private float projectileSpeed = 80;
 
     void Start()
     {
